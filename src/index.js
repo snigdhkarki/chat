@@ -16,14 +16,13 @@ import {
 } from 'firebase/firestore'
 
 const firebaseConfig = {
-    apiKey: "AIzaSyAmQvsrw-F6qE0aYBQAwpwGTs8CXQjUy5g",
-    authDomain: "library-f9a44.firebaseapp.com",
-    databaseURL: "https://library-f9a44-default-rtdb.europe-west1.firebasedatabase.app",
-    projectId: "library-f9a44",
-    storageBucket: "library-f9a44.appspot.com",
-    messagingSenderId: "473935880201",
-    appId: "1:473935880201:web:18eb00e70ee8f981d318d8"
-};
+    apiKey: "AIzaSyB-zFnELyZl5KukDHeEbG3Ka1jkcoKX_hw",
+    authDomain: "chat-app-b15d6.firebaseapp.com",
+    projectId: "chat-app-b15d6",
+    storageBucket: "chat-app-b15d6.appspot.com",
+    messagingSenderId: "543818976188",
+    appId: "1:543818976188:web:7c01899eb4ed51b58d39b9"
+  };
 
 initializeApp(firebaseConfig);
 
@@ -31,11 +30,11 @@ initializeApp(firebaseConfig);
 
 const db = getFirestore();
 
-const colRef = collection(db, 'books');
+const colRef = collection(db, 'chats');
 getDocs(colRef).then((snapshot)=> {
-    let books = [];
+    let chats = [];
     snapshot.docs.forEach((doc)=> {
-        books.push({
+        chats.push({
             ...doc.data(),id:doc.id,
         })
         
@@ -44,27 +43,26 @@ getDocs(colRef).then((snapshot)=> {
 
 const q = query(colRef,orderBy('createdAt'))
 
-const addBookForm = document.querySelector('.add');
-addBookForm.addEventListener('submit',(e)=>{
+const addChatForm = document.querySelector('.add');
+addChatForm.addEventListener('submit',(e)=>{
     e.preventDefault();
     addDoc(colRef,{
-        name:addBookForm.name.value,
-        page:addBookForm.page.value,
-        read:addBookForm.read.value,
+        chat:addChatForm.chat.value,
+        name:addChatForm.name.value,        
         createdAt:serverTimestamp(),
     }).then(()=>{
-        addBookForm.reset();
+        addChatForm.reset();
     })
 })
-let books = [];
+let chats = [];
 
 onSnapshot(q,(snapshot)=>{
-    books = [];
+    chats = [];
     snapshot.docs.forEach((doc)=> {
-        books.push({
+        chats.push({
             ...doc.data(),id:doc.id,
         })
-        console.log(books);
+        console.log(chats);
         
     })
     
@@ -76,14 +74,16 @@ const btn1 = document.querySelector(".btn1");
 btn1.addEventListener('click',function()
 {
     document.querySelector('.div').innerHTML = "";
-    for(let i =0; i<books.length;i++)
+    for(let i =0; i<chats.length;i++)
     {
         
         let br = document.createElement('br');
-        let dummy = document.createTextNode(books[i].name);
+        let dummy = document.createTextNode(chats[i].chat);
+        let dummy1 = document.createTextNode(' (' + chats[i].name + ')');
         let div = document.querySelector('.div');
         div.appendChild(br);
         div.appendChild(dummy);
+        div.appendChild(dummy1);
         let btn = document.createElement('button');
         btn.type = 'button';        
         btn.className = 'btn'+(i+2);
@@ -91,35 +91,13 @@ btn1.addEventListener('click',function()
         div.appendChild(btn);
         btn.addEventListener('click',function()
         {
-            const docref = doc(db,'books',books[i].id);
+            const docref = doc(db,'chats',chats[i].id);
             deleteDoc(docref).then(()=>{
                 repeat();
             }
             )                   
         });
-        let btn1 = document.createElement('button');
-        btn1.type = 'button';
-        btn1.className = 'btn1' + (i+2);
-        btn1.innerHTML = 'toggleread';
-        div.appendChild(btn1);
-        btn1.addEventListener('click',function()
-        {
-            if(books[i].read == 'true')
-            {
-                const docRef3 = doc(db, 'books',books[i].id);
-                updateDoc(docRef3,{
-                    read:'false'
-                })
-            }
-            else
-            {
-                const docRef3 = doc(db, 'books',books[i].id);
-                updateDoc(docRef3,{
-                    read:'true'
-                })
-
-            }
-        });
+        
         
 
 
@@ -134,14 +112,16 @@ btn1.addEventListener('click',function()
 function repeat (){
 
     document.querySelector('.div').innerHTML = "";
-    for(let i =0; i<books.length;i++)
+    for(let i =0; i<chats.length;i++)
     {
         
         let br = document.createElement('br');
-        let dummy = document.createTextNode(books[i].name);
+        let dummy = document.createTextNode(chats[i].chat);
+        let dummy1 = document.createTextNode(' (' + chats[i].name + ')');
         let div = document.querySelector('.div');
         div.appendChild(br);
         div.appendChild(dummy);
+        div.appendChild(dummy1);
         let btn = document.createElement('button');
         btn.type = 'button';        
         btn.className = 'btn'+(i+2);
@@ -149,7 +129,7 @@ function repeat (){
         div.appendChild(btn);
         btn.addEventListener('click',function()
         {
-            const docref = doc(db,'books',books[i].id);
+            const docref = doc(db,'chats',chats[i].id);
             deleteDoc(docref).then(()=>{
                 repeat();
                 
@@ -168,29 +148,7 @@ function repeat (){
 
             
         });
-        let btn1 = document.createElement('button');
-        btn1.type = 'button';
-        btn1.className = 'btn1' + (i+2);
-        btn1.innerHTML = 'toggleread';
-        div.appendChild(btn1);
-        btn1.addEventListener('click',function()
-        {
-            if(books[i].read == 'true')
-            {
-                const docRef3 = doc(db, 'books',books[i].id);
-                updateDoc(docRef3,{
-                    read:'false'
-                })
-            }
-            else
-            {
-                const docRef3 = doc(db, 'books',books[i].id);
-                updateDoc(docRef3,{
-                    read:'true'
-                })
-
-            }
-        });
+        
         
 
 
