@@ -53,37 +53,7 @@ addChatForm.addEventListener('submit',(e)=>{
 
     }).then(()=>{
         addChatForm.reset();
-        document.querySelector('.div').innerHTML = "";
-        for(let i =0; i<chats.length;i++)
-        {
-            
-            let br = document.createElement('br');
-            let dummy = document.createTextNode(chats[i].chat);
-            let dummy1 = document.createTextNode(' (' + chats[i].name + ')');
-            let div = document.querySelector('.div');
-            div.appendChild(br);
-            div.appendChild(dummy);
-            div.appendChild(dummy1);
-            let btn = document.createElement('button');
-            btn.type = 'button';        
-            btn.className = 'btn'+(i+2);
-            btn.innerHTML = 'delete';
-            div.appendChild(btn);
-            btn.addEventListener('click',function()
-            {
-                const docref = doc(db,'chats',chats[i].id);
-                deleteDoc(docref).then(()=>{
-                    repeat();
-                }
-                )                   
-            });
-            
-            
-
-
-            
-            
-        }
+        
     })
 })
 let chats = [];
@@ -101,10 +71,9 @@ onSnapshot(q,(snapshot)=>{
 
 
 })
-const btn1 = document.querySelector(".btn1");
 
-btn1.addEventListener('click',function()
-{
+function refresh()
+    {
     document.querySelector('.div').innerHTML = "";
     for(let i =0; i<chats.length;i++)
     {
@@ -129,15 +98,12 @@ btn1.addEventListener('click',function()
             }
             )                   
         });
-        
-        
+    }   
 
 
         
         
     }
-
-})
 
 
 
@@ -188,6 +154,8 @@ function repeat (){
         
     }
 }
+
+setInterval(refresh, 2000); // Run sayHello every 3 seconds
 
 
 
