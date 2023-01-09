@@ -27,7 +27,7 @@ const firebaseConfig = {
 initializeApp(firebaseConfig);
 
 
-
+let name = prompt('Enter the data you want:');
 const db = getFirestore();
 
 const colRef = collection(db, 'chats');
@@ -48,10 +48,42 @@ addChatForm.addEventListener('submit',(e)=>{
     e.preventDefault();
     addDoc(colRef,{
         chat:addChatForm.chat.value,
-        name:addChatForm.name.value,        
+        name:name,        
         createdAt:serverTimestamp(),
+
     }).then(()=>{
         addChatForm.reset();
+        document.querySelector('.div').innerHTML = "";
+        for(let i =0; i<chats.length;i++)
+        {
+            
+            let br = document.createElement('br');
+            let dummy = document.createTextNode(chats[i].chat);
+            let dummy1 = document.createTextNode(' (' + chats[i].name + ')');
+            let div = document.querySelector('.div');
+            div.appendChild(br);
+            div.appendChild(dummy);
+            div.appendChild(dummy1);
+            let btn = document.createElement('button');
+            btn.type = 'button';        
+            btn.className = 'btn'+(i+2);
+            btn.innerHTML = 'delete';
+            div.appendChild(btn);
+            btn.addEventListener('click',function()
+            {
+                const docref = doc(db,'chats',chats[i].id);
+                deleteDoc(docref).then(()=>{
+                    repeat();
+                }
+                )                   
+            });
+            
+            
+
+
+            
+            
+        }
     })
 })
 let chats = [];
